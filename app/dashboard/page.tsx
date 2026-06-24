@@ -40,21 +40,21 @@ export default async function DashboardPage() {
                 <table className="min-w-full text-left text-sm whitespace-nowrap">
                   <thead className="uppercase tracking-wider border-b-2 border-gray-200 bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-gray-600">Date</th>
-                      <th className="px-4 py-3 text-gray-600">County</th>
-                      <th className="px-4 py-3 text-gray-600">Size</th>
-                      <th className="px-4 py-3 text-gray-600">Income</th>
-                      <th className="px-4 py-3 text-gray-600">Result</th>
-                      <th className="px-4 py-3 text-gray-600">Action</th>
+                      <th className="px-4 py-3 text-gray-900">Date</th>
+                      <th className="px-4 py-3 text-gray-900">County</th>
+                      <th className="px-4 py-3 text-gray-900">Size</th>
+                      <th className="px-4 py-3 text-gray-900">Income</th>
+                      <th className="px-4 py-3 text-gray-900">Result</th>
+                      <th className="px-4 py-3 text-gray-900">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {history.map((calc) => (
                       <tr key={calc.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="px-4 py-3 text-gray-600">{new Date(calc.created_at).toLocaleDateString()}</td>
-                        <td className="px-4 py-3">{calc.county}</td>
-                        <td className="px-4 py-3">{calc.household_size}</td>
-                        <td className="px-4 py-3">${calc.annual_income.toLocaleString()}</td>
+                        <td className="px-4 py-3 text-gray-900">{new Date(calc.created_at).toLocaleDateString()}</td>
+                        <td className="px-4 py-3 text-gray-900">{calc.county}</td>
+                        <td className="px-4 py-3 text-gray-900">{calc.household_size}</td>
+                        <td className="px-4 py-3 text-gray-900">${calc.annual_income.toLocaleString()}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${calc.is_eligible ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                             {calc.is_eligible ? 'Eligible' : 'Ineligible'}
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
                 </table>
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">No past calculations found.</p>
+              <p className="text-gray-900 text-sm">No past calculations found.</p>
             )}
           </div>
         </div>
