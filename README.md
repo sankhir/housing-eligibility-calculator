@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Housing Eligibility Calculator
 
-## Getting Started
+A full-stack web application for determining housing assistance eligibility based on household size, annual income, and county. Built with Next.js, Supabase, Vercel, and PostHog.
 
-First, run the development server:
+## Tech Stack
 
-```bash
+- **Frontend:** Next.js 15, Tailwind CSS
+- **Backend/Auth/Database:** Supabase
+- **Deployment:** Vercel
+- **Analytics:** PostHog
+
+## Local Setup Instructions
+
+### 1. Clone the repository
+
+git clone https://github.com/sankhir/housing-eligibility-calculator.git
+cd housing-eligibility-calculator
+
+### 2. Install dependencies
+
+npm install
+
+### 3. Set up environment variables
+
+Create a `.env.local` file in the root of the project and add the following:
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_project_api_key
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
+
+### 4. Set up the Supabase database
+
+In your Supabase project, open the SQL Editor and run the following:
+
+CREATE TABLE calculations (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) NOT NULL,
+    household_size INT NOT NULL,
+    annual_income NUMERIC NOT NULL,
+    county TEXT NOT NULL,
+    is_eligible BOOLEAN NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE calculations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own calculations" ON calculations
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert their own calculations" ON calculations
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own calculations" ON calculations
+    FOR DELETE USING (auth.uid() = user_id);
+
+### 5. Run the development server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- User authentication (sign up, log in, log out)
+- AMI-based housing eligibility calculator for Palm Beach, Broward, and Miami-Dade counties
+- Calculation history saved per user account
+- Delete past calculations
+- PostHog analytics tracking eligibility calculation events
 
-## Learn More
+## Live Demo
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+https://housing-eligibility-calculator-ltt0bruw8-sankhir1.vercel.app
